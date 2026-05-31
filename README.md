@@ -16,16 +16,20 @@ To test the detection capabilities of the SIEM, an adversary simulation was exec
 ## Execution and Detection
 1. **Infrastructure Setup:** Configured a Splunk Universal Forwarder and Sysmon to ship logs to the centralized SIEM. Diagnosed and resolved a network pipeline failure by modifying `outputs.conf` and validating TCP port 9997.
 2. **Attack Simulation:** Executed the Atomic Red Team payload to trigger the PowerShell execution bypass. 
-3. **Threat Hunting:** The raw Sysmon telemetry was ingested as XML. Wrote custom Splunk Processing Language (SPL) utilizing the `xmlkv` command to parse the raw text and extract the `CommandLine` and `ParentImage` fields.
+3. **Threat Hunting:** The raw Sysmon telemetry was ingested as XML. Wrote custom Splunk Processing Language (SPL) utilizing the `rex` command to parse the raw text and extract the `CommandLine` and `ParentImage` fields.
 
 ### Evidence of Detection
 
 After executing the Atomic Red Team payload, the custom SPL query successfully parsed the raw XML and extracted the relevant indicators:
 
-| _time | CommandLine | ParentImage | EventCode |
-| :--- | :--- | :--- | :--- |
-| 2026-05-17 14:32:10 | `powershell.exe -ExecutionPolicy Bypass -Command "Invoke-AtomicTest T1059.001"` | `C:\Windows\System32\cmd.exe` | 1 |
-| 2026-05-17 14:32:12 | `powershell.exe -NoP -NonI -W Hidden -Exec Bypass` | `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe` | 1 |
+
+
+Here are actual screenshots from splunk 
+<img width="1511" height="857" alt="image" src="https://github.com/user-attachments/assets/ab825364-b965-494f-869c-060b43dbce76" />
+
+
+
+
 
 ## Conclusion
 By filtering out routine background processes, the exact malicious command line execution was isolated and identified. This project validated the effectiveness of continuous endpoint monitoring and custom log parsing in identifying living-off-the-land (LotL) techniques
