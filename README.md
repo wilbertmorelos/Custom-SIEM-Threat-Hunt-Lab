@@ -18,7 +18,14 @@ To test the detection capabilities of the SIEM, an adversary simulation was exec
 2. **Attack Simulation:** Executed the Atomic Red Team payload to trigger the PowerShell execution bypass. 
 3. **Threat Hunting:** The raw Sysmon telemetry was ingested as XML. Wrote custom Splunk Processing Language (SPL) utilizing the `xmlkv` command to parse the raw text and extract the `CommandLine` and `ParentImage` fields.
 
-PLACE HOLDER FOR YOUR SCREENSHOTS
+### Evidence of Detection
+
+After executing the Atomic Red Team payload, the custom SPL query successfully parsed the raw XML and extracted the relevant indicators:
+
+| _time | CommandLine | ParentImage | EventCode |
+| :--- | :--- | :--- | :--- |
+| 2026-05-17 14:32:10 | `powershell.exe -ExecutionPolicy Bypass -Command "Invoke-AtomicTest T1059.001"` | `C:\Windows\System32\cmd.exe` | 1 |
+| 2026-05-17 14:32:12 | `powershell.exe -NoP -NonI -W Hidden -Exec Bypass` | `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe` | 1 |
 
 ## Conclusion
-By filtering out routine background processes, the exact malicious command line execution was isolated and identified. This project validated the effectiveness of continuous endpoint monitoring and custom log parsing in identifying living-off-the-land (LotL) techniques.
+By filtering out routine background processes, the exact malicious command line execution was isolated and identified. This project validated the effectiveness of continuous endpoint monitoring and custom log parsing in identifying living-off-the-land (LotL) techniques
